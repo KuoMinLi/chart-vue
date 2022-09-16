@@ -1,5 +1,5 @@
 <template>
-    <div class="chart chart_area">
+    <div class="chart">
       <h2>年齡</h2>
       <canvas id="myChart2" width="800px" height="40vh"></canvas>
     </div>
@@ -29,7 +29,6 @@ export default {
           agelist.push(item.age);
         }
       });
-      console.log(agelist);
       [...agelist].forEach((item) => {
         const age = [];
         [...data].forEach((item2) => {
@@ -42,7 +41,9 @@ export default {
           person: age.length,
         });
       });
-      console.log(this.ageData);
+      this.ageData[4].age = '41~50 歲';
+      this.ageData[4].person += this.ageData[5].person;
+      this.ageData.splice(5, 1);
       const ctx = document.getElementById('myChart2');
       const labels = this.ageData.map((item) => item.age);
       const myChart = new Chart(ctx, {
@@ -50,12 +51,11 @@ export default {
         data: {
           labels,
           datasets: [{
-            label: '地區',
             data: this.ageData.map((item) => item.person),
             backgroundColor: 'rgb(142, 125, 250)',
           }],
         },
-        responsive: true,
+        responsive: false,
         options: {
           layout: {
             padding: 40,
@@ -64,9 +64,9 @@ export default {
             y: {
               beginAtZero: true,
               grid: {
-                drawBorder: false,
                 color: '#6B6783',
                 borderColor: '#6B6783',
+                tickColor: 'transparent',
               },
               ticks: {
                 color: '#F2F2F4',
@@ -96,6 +96,18 @@ export default {
             },
             legend: {
               display: false,
+            },
+            tooltip: {
+              position: 'nearest',
+              callbacks: {
+                label(context) {
+                  let label = context.dataset.label || '';
+                  if (context.parsed.y !== null) {
+                    label += ` ${context.parsed.y}人`;
+                  }
+                  return label;
+                },
+              },
             },
           },
         },

@@ -1,8 +1,8 @@
 <template>
-    <div class="chart chart_area">
-      <h2>地區</h2>
-      <canvas id="myChart" width="800px" height="40vh"></canvas>
-    </div>
+  <div class="chart chart_edu">
+    <h2>科系與學歷</h2>
+    <canvas id="myChart4" width="800px" height="40vh"></canvas>
+  </div>
 </template>
 
 <script>
@@ -13,7 +13,7 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      areaList: [],
+      eduData: [],
     };
   },
   created() {
@@ -23,39 +23,74 @@ export default {
       timeout: 5000,
     }).then((res) => {
       const { data } = res;
-      const arealist = ['北北基', '桃竹苗', '中彰投', '雲嘉南', '高屏'];
-      const area = ['台灣 - 北北基', '台灣 - 桃竹苗', '台灣 - 中彰投', '台灣 - 雲嘉南', '台灣 - 高屏'];
-      [...area].forEach((item) => {
-        const areaData = [];
+      const majorlist = ['資訊科系相關(資工、資管、光電、電機)'];
+      [...data].forEach((item) => {
+        if (majorlist.indexOf(item.major) === -1) {
+          majorlist.push(item.major);
+        }
+      });
+      [...majorlist].forEach((item) => {
+        const eduBachelor = [];
+        const eduMaster = [];
         [...data].forEach((item2) => {
-          if (item === item2.company.area) {
-            areaData.push(item2);
+          if (item === item2.major) {
+            if (item2.education === '碩士畢業' || item2.education === '博士畢業') {
+              eduMaster.push(item2.education);
+            } else {
+              eduBachelor.push(item2.education);
+            }
           }
         });
-        this.areaList.push({
-          area: item,
-          person: areaData.length,
+        this.eduData.push({
+          major: item,
+          bachelor: eduBachelor.length,
+          master: eduMaster.length,
         });
       });
-      const ctx = document.getElementById('myChart');
-      const labels = arealist;
+      this.eduData[0].major = '資訊科系';
+      this.eduData[1].major = '非本科';
+      for (let i = 2; i < this.eduData.length; i += 1) {
+        this.eduData[1].bachelor += this.eduData[i].bachelor;
+        this.eduData[1].master += this.eduData[i].master;
+      }
+      this.eduData.splice(2, this.eduData.length - 2);
+
+      const ctx = document.getElementById('myChart4');
+      const labels = this.eduData.map((item) => item.major);
       const myChart = new Chart(ctx, {
         type: 'bar',
         data: {
           labels,
           datasets: [{
-            data: this.areaList.map((item) => item.person),
+            label: '大學（含）以下',
+            data: this.eduData.map((item) => item.bachelor),
             backgroundColor: 'rgb(142, 125, 250)',
+          },
+          {
+            label: '碩博士',
+            data: this.eduData.map((item) => item.master),
+            backgroundColor: '#D2CBFD',
           }],
         },
-        responsive: true,
+        responsive: false,
         options: {
+          indexAxis: 'y',
           layout: {
             padding: 40,
           },
           scales: {
             y: {
+              stacked: true,
               beginAtZero: true,
+              grid: {
+                borderColor: '#6B6783',
+              },
+              ticks: {
+                color: '#F2F2F4',
+              },
+            },
+            x: {
+              stacked: true,
               grid: {
                 color: '#6B6783',
                 borderColor: '#6B6783',
@@ -65,18 +100,10 @@ export default {
                 color: '#F2F2F4',
               },
             },
-            x: {
-              grid: {
-                borderColor: '#6B6783',
-              },
-              ticks: {
-                color: '#F2F2F4',
-              },
-            },
           },
           plugins: {
             title: {
-              display: true,
+              display: false,
               text: '單位:人',
               align: 'start',
               padding: {
@@ -88,7 +115,8 @@ export default {
               },
             },
             legend: {
-              display: false,
+              display: true,
+              position: 'bottom',
             },
             tooltip: {
               position: 'nearest',
@@ -96,7 +124,7 @@ export default {
                 label(context) {
                   let label = context.dataset.label || '';
                   if (context.parsed.y !== null) {
-                    label += ` ${context.parsed.y}人`;
+                    label += ` ${context.parsed.x}人`;
                   }
                   return label;
                 },

@@ -15,6 +15,9 @@
     <div class="container">
       <AreaView />
       <AgeView />
+      <SexView />
+      <EducationView />
+      <SkillView />
     </div>
     <div class="footer">Copyright © 2021 Joyce</div>
   </div>
@@ -24,6 +27,9 @@
 
 import AgeView from '@/components/AgeView.vue';
 import AreaView from '@/components/AreaView.vue';
+import SexView from '@/components/SexView.vue';
+import EducationView from '@/components/EducationView.vue';
+import SkillView from '@/components/SkillView.vue';
 
 export default {
   data() {
@@ -34,6 +40,9 @@ export default {
   components: {
     AreaView,
     AgeView,
+    SexView,
+    EducationView,
+    SkillView,
   },
   name: 'TestView',
 };
