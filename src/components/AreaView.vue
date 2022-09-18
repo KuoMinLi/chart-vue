@@ -1,5 +1,5 @@
 <template>
-    <div class="chart chart_area">
+    <div class="chart chart50 chart_area">
       <h2>地區</h2>
       <canvas id="myChart" width="800px" height="40vh"></canvas>
     </div>

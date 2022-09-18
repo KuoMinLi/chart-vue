@@ -67,8 +67,8 @@ export default {
           skillratio.push(item.ratio);
         }
       });
-      console.log(skillratio);
-      console.log(skilllabels);
+      // console.log(skillratio);
+      // console.log(skilllabels);
 
       const ctx = document.getElementById('myChart5');
       const labels = skilllabels;
