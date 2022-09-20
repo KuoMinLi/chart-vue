@@ -152,3 +152,14 @@ button {
   color: $chart;
 }
 
+.score_choose {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.industry_sort {
+  padding: 16px 24px;
+  border: 1px solid $tertiary;
+  width: auto;
+}

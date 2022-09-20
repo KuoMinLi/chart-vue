@@ -22,7 +22,9 @@
       <SkillView />
     </div>
     <div class="container" v-if="!isBaseImf">
+      <TenureView />
       <SalaryView />
+      <ScoreView />
     </div>
     <div class="footer">Copyright © 2021 Joyce</div>
   </div>
@@ -35,6 +37,8 @@ import SexView from '@/components/SexView.vue';
 import EducationView from '@/components/EducationView.vue';
 import SkillView from '@/components/SkillView.vue';
 import SalaryView from '@/components/SalaryView.vue';
+import TenureView from '@/components/TenureView.vue';
+import ScoreView from '@/components/ScoreView.vue';
 
 export default {
   data() {
@@ -50,6 +54,8 @@ export default {
     EducationView,
     SkillView,
     SalaryView,
+    TenureView,
+    ScoreView,
   },
   name: 'TestView',
   methods: {

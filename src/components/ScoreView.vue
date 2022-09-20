@@ -1,7 +1,10 @@
 <template>
   <div class="chart chart100">
-    <h2>年薪</h2>
-    <canvas id="myChart-Salary" width="800px" height="40vh"></canvas>
+    <div class="score_choose">
+      <h2>產業薪資與滿意度</h2>
+    <button class="industry_sort" @click=sortData(myChart)>依從業人數 高至低</button>
+    </div>
+    <canvas id="myChart-Score" width="800px" height="40vh"></canvas>
   </div>
 </template>
 
@@ -14,7 +17,20 @@ export default {
   data() {
     return {
       salaryData: [],
+      myChart: null,
     };
+  },
+  methods: {
+    sortData(cc) {
+      this.salaryData.sort((a, b) => b.person - a.person);
+      console.log(cc.data.labels);
+
+      // cc.data.labels = this.salaryData.map((item) => item.tenure);
+      // mychart.data.datasets[1].data = this.this.salaryData.map((item) => item.salary);
+      // mychart.data.datasets[0].data = this.salaryData.map((item) => item.score);
+      // mychart.update();
+      console.log(this.salaryData);
+    },
   },
   created() {
     axios({
@@ -105,12 +121,19 @@ export default {
           value: 4500,
         },
       ];
-      const tenurelist = ['1 年以下', '1~2 年', '2~3 年', '3~5 年', '5~7 年', '7~9 年', '10 年以上'];
       // console.log(tenurelist);
-      [...tenurelist].forEach((item) => {
+      const industrylist = ['電子商務', '數位整合行銷', 'SaaS 服務', '博奕', '教育產業', '接案公司', '區塊鏈', '顧問公司'];
+      [...data].forEach((item) => {
+        if (industrylist.indexOf(item.company.industry) === -1) {
+          industrylist.push(item.company.industry);
+        }
+      });
+      [...industrylist].forEach((item) => {
         const salary = [];
+        const score = [];
         [...data].forEach((item2) => {
-          if (item === item2.company.job_tenure) {
+          if (item === item2.company.industry) {
+            score.push(+item2.company.salary_score);
             [...salarylist].forEach((item3) => {
               if (item2.company.salary === item3.name) {
                 salary.push(item3.value);
@@ -118,34 +141,37 @@ export default {
             });
           }
         });
-
         this.salaryData.push({
           tenure: item,
           salary: (salary.reduce((a, b) => a + b) / salary.length).toFixed(0),
+          score: (score.reduce((a, b) => a + b) / score.length).toFixed(1),
+          person: salary.length,
         });
       });
       // console.log(this.salaryData);
-      const ctx = document.getElementById('myChart-Salary');
+      const ctx = document.getElementById('myChart-Score');
       const labels = this.salaryData.map((item) => item.tenure);
-      const myChart = new Chart(ctx, {
+      this.myChart = new Chart(ctx, {
         // type: 'scatter',
         data: {
           labels,
           datasets: [
             {
               type: 'line',
-              data: this.salaryData.map((item) => item.salary),
+              data: this.salaryData.map((item) => item.score),
               backgroundColor: 'rgb(142, 125, 250)',
               borderColor: '#F9F8FE',
               pointStyle: 'circle',
               pointBorderWidth: 5,
               pointRadius: 15,
               pointHoverRadius: 20,
+              yAxisID: 'y2',
             },
             {
               type: 'bar',
               data: this.salaryData.map((item) => item.salary),
               backgroundColor: 'rgb(142, 125, 250)',
+              yAxisID: 'y',
             }],
         },
         responsive: false,
@@ -155,6 +181,8 @@ export default {
           },
           scales: {
             y: {
+              max: 1200,
+              position: 'left',
               beginAtZero: true,
               grid: {
                 color: '#6B6783',
@@ -165,7 +193,13 @@ export default {
                 color: '#F2F2F4',
               },
             },
+            y2: {
+              max: 10,
+              min: 0,
+              position: 'right',
+            },
             x: {
+              max: 7,
               grid: {
                 borderColor: '#6B6783',
               },
@@ -205,7 +239,7 @@ export default {
           },
         },
       });
-      myChart.update();
+      this.myChart.update();
     }).catch((err) => {
       console.log(err);
     });
