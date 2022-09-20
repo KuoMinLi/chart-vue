@@ -1,24 +1,8 @@
-# chart-vue
+# 薪資數據圖表調查
 
-## Project setup
-```
-npm install
-```
+![image](https://user-images.githubusercontent.com/100744871/191197277-90371647-f136-467b-a2af-0ff81683b705.png)
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+* The F2E - 前端修練精神時光屋
+* 投稿作品 - 薪資數據圖表調查
+* 使用 Vue + charh.js 插件做成
+* 設計稿由 Chi 提供: https://2021.thef2e.com/users/6296427084285739330/
